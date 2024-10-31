@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using Xunit.Abstractions;
 
 namespace BookShopEfc;
@@ -97,8 +98,14 @@ public static class UtilExtensions
         => self + Enumerable.Range(0, numberOfSpaces + 1 - self.Length)
             .Aggregate("", (acc, _) => acc + " ");
 
-    public static void PrintList<T>(this ITestOutputHelper self, IEnumerable<T> input)
+    public static void PrintTable<T>(this ITestOutputHelper self, IEnumerable<T> input)
     {
         self.WriteLine(ListToTable.Format(input));
+    }
+
+    public static void PrintObject<T>(this ITestOutputHelper helper, T obj) where T : class
+    {
+        List<T> list = new List<T>(){obj};
+        helper.PrintTable(list);
     }
 }
