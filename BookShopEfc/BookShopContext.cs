@@ -2,7 +2,7 @@
 
 namespace BookShopEfc;
 
-public class AppContext : DbContext
+public class BookShopContext : DbContext
 {
     public DbSet<Book> Books => Set<Book>();
     public DbSet<PriceOffer> PriceOffers => Set<PriceOffer>();
