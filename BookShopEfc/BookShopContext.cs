@@ -13,7 +13,7 @@ public class BookShopContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite(@"Data Source = bookstore.db");
+        optionsBuilder.UseSqlite(@"Data Source = C:\TRMO\RiderProjects\BookShopEfc\BookShopEfc\bookstore.db");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
