@@ -33,6 +33,7 @@ public static class ListToTable
     private static ImmutableArray<PropertyInfo> ExtractNonNavPropPropertiesFromElementType<T>()
         => typeof(T).GetProperties()
             .Where(info =>
+                info.PropertyType.IsValueType ||
                 info.PropertyType.IsPrimitive ||
                 info.PropertyType == typeof(string))
             .ToImmutableArray();
@@ -98,7 +99,7 @@ public static class UtilExtensions
         => self + Enumerable.Range(0, numberOfSpaces + 1 - self.Length)
             .Aggregate("", (acc, _) => acc + " ");
 
-    public static void PrintTable<T>(this ITestOutputHelper self, IEnumerable<T> input)
+    public static void PrintList<T>(this ITestOutputHelper self, IEnumerable<T> input)
     {
         self.WriteLine(ListToTable.Format(input));
     }
@@ -106,6 +107,6 @@ public static class UtilExtensions
     public static void PrintObject<T>(this ITestOutputHelper helper, T obj) where T : class
     {
         List<T> list = new List<T>(){obj};
-        helper.PrintTable(list);
+        helper.PrintList(list);
     }
 }
