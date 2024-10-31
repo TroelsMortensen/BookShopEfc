@@ -28,4 +28,4 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 
 Here is the entity class diagram:
 
-![diagram]()
+![diagram](https://github.com/TroelsMortensen/BookShopEfc/blob/master/BookShopEfc/BookShopEfc.png)
