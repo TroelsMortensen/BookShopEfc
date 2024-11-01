@@ -106,7 +106,7 @@ public static class UtilExtensions
 
     public static void PrintObject<T>(this ITestOutputHelper helper, T obj) where T : class
     {
-        List<T> list = new List<T>(){obj};
+        List<T> list = [obj];
         helper.PrintList(list);
     }
     
