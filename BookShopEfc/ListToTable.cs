@@ -109,4 +109,12 @@ public static class UtilExtensions
         List<T> list = new List<T>(){obj};
         helper.PrintList(list);
     }
+    
+    public static void PrintJson<T>(this ITestOutputHelper helper, T obj) where T : class
+    {
+        helper.WriteLine(JsonSerializer.Serialize(obj, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        }));
+    }
 }
