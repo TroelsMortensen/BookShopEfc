@@ -116,12 +116,66 @@ public class Queries(ITestOutputHelper printer)
     [Fact]
     public void LetsSeeWhatHappens()
     {
-        Book single =  ctx.Books
+        Book single = ctx.Books
             .Include(book => book.Categories)
             .Include(book => book.PriceOffer)
             .Include(book => book.WrittenBy)
-                .ThenInclude(writes => writes.Author)
+            .ThenInclude(writes => writes.Author)
             .Include(book => book.Reviews).First();
-        ;
+    }
+
+    [Fact] // What are the categories of book with id 15?
+    public void Ex2_1()
+    {
+        List<Category> categories = ctx.Books
+            .Where(book => book.Id == 15)
+            .SelectMany(book => book.Categories)
+            .ToList();
+        printer.PrintList(categories);
+    }
+
+    [Fact] // Print the names of the authors of the book named ”A World Apart”?
+    public void Ex2_2()
+    {
+        var list = ctx.Books
+            .Where(book => book.Title == "A World Apart")
+            .SelectMany(book => book.WrittenBy)
+            .Select(writes => new
+            {
+                writes.Author.Name
+            }).ToList();
+        
+        printer.PrintList(list);
+    }
+
+    [Fact] // Find the book with name ”Beyond the Dark Woods”,
+           // and print out the following attributes:
+           // Book::Title, PriceOffer::NewPrice, PriceOffer::PromotionalText.
+    public void Ex2_3()
+    {
+        var single = ctx.Books
+            // .Where(book => book.Title == "Beyond the Dark Woods")
+            .Select(book => new
+            {
+                book.Title,
+                ActualPrice = book.PriceOffer != null ? book.PriceOffer.NewPrice : book.Price,
+                PromotionalText = book.PriceOffer != null ? book.PriceOffer.PromotionalText : null,
+            })
+            .ToList();
+        printer.PrintList(single);
+    }
+
+    [Fact] // How many reviews are there for the book with title ”The Last Ember”?
+    public void Ex2_4()
+    {
+        int count = ctx.Reviews
+            .Count(review => review.Book.Title == "The Last Ember");
+        
+        printer.WriteLine(count.ToString());
+    }
+
+    [Fact] // Print the titles of the books written by ”Emily Hart”.
+    public void Ex2_5()
+    {
     }
 }
