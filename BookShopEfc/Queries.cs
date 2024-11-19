@@ -37,43 +37,91 @@ public class Queries(ITestOutputHelper printer)
     [Fact]
     public void Ex1()
     {
+        var list = ctx.Books
+            .Where(book => book.Id < 10)
+            .Select(book => new
+            {
+                book.Id,
+                book.Title,
+                book.Price
+            }).ToList();
+        printer.PrintList(list);
     }
 
     // Ex2: Find the reviews for book with id 42, and print them out
     [Fact]
     public void Ex2()
     {
+        List<Review> reviews = ctx.Reviews
+            .Where(rev => rev.Book.Id == 42)
+            .ToList();
+        printer.PrintList(reviews);
     }
 
     // Ex3: Find the reviews for book with id 42, and print out only Rating and VoterName
     [Fact]
     public void Ex3()
     {
+        var reviews = ctx.Reviews
+            .Where(rev => rev.Book.Id == 42)
+            .Select(rev => new
+            {
+                rev.Rating,
+                rev.VoterName
+            }).ToList();
+        printer.PrintList(reviews);
     }
 
     // Ex4: What are the categories for the book with id 31? 
     [Fact]
     public void Ex4()
     {
+        var categories = ctx.Category
+            .Where(cat => cat.Books.Any(book => book.Id == 31))
+            .ToList();
+
+        printer.PrintList(categories);
     }
-    
+
     // Ex5: How many books were published in 2020? 
     [Fact]
     public void Ex5()
     {
+        List<Book> booksIn2020 = ctx.Books
+            .Where(book => book.PublishDate.Year == 2020)
+            .ToList();
+        printer.WriteLine($"Books published in 2020: {booksIn2020.Count}");
     }
 
     // Ex6: Who wrote the book with title "Dreamers and Wanderers"?
     [Fact]
     public void Ex6()
     {
-
+        List<string> names = ctx.Writes
+            .Where(writes => writes.Book.Title == "Dreamers and Wanderers")
+            .Select(w => w.Author.Name)
+            .ToList();
+        printer.PrintJson(names);
     }
-    
+
     // Ex7: How many books has author "Michael Lawson" written, or co-written?
     [Fact]
     public void Ex7()
     {
+        int count = ctx.Writes
+            .Count(w => w.Author.Name == "Michael Lawson");
+        printer.WriteLine(count.ToString());
+    }
 
+    [Fact]
+    public void LetsSeeWhatHappens()
+    {
+        Book single =  ctx.Books
+            .Include(book => book.Categories)
+            .Include(book => book.PriceOffer)
+            .Include(book => book.WrittenBy)
+                .ThenInclude(writes => writes.Author)
+            .Include(book => book.Reviews).First();
+        ;
     }
 }
